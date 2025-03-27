@@ -1,21 +1,17 @@
 import { useState } from "react";
 import "./style.css";
+import { TodoForm } from "./TodoForm";
 
 export default function App() {
-  const [newItem, setNewItem] = useState("");
   const [todos, setTodos] = useState([]);
 
-  function submitForm(e) {
-    e.preventDefault();
-
+  function addTodo(title) {
     setTodos((currentvalue) => {
       return [
         ...currentvalue,
-        { id: crypto.randomUUID(), title: newItem, checked: false },
+        { id: crypto.randomUUID(), title: title, checked: false },
       ];
     });
-
-    setNewItem("");
   }
 
   function toggleTodo(id, checked) {
@@ -40,7 +36,8 @@ export default function App() {
 
   return (
     <>
-      <form className="new-item-form" onSubmit={submitForm}>
+      <TodoForm onSubmit={addTodo} />
+      {/* <form className="new-item-form" onSubmit={submitForm}>
         <div className="form-row">
           <h1>Ashok</h1>
           <label htmlFor="item">Enter Name</label>
@@ -53,7 +50,7 @@ export default function App() {
         </div>
 
         <button className="btn">Add Me!</button>
-      </form>
+      </form> */}
 
       <h1>Todo List</h1>
       <ul className="list">
