@@ -1,28 +1,86 @@
-import "./style.css"
+import { useState } from "react";
+import "./style.css";
 
 export default function App() {
+  const [newItem, setNewItem] = useState("");
+  const [todos, setTodos] = useState([]);
+
+  function submitForm(e) {
+    e.preventDefault();
+
+    setTodos((currentvalue) => {
+      return [
+        ...currentvalue,
+        { id: crypto.randomUUID(), title: newItem, checked: false },
+      ];
+    });
+
+    setNewItem("");
+  }
+
+  function toggleTodo(id, checked) {
+    console.log(id, todos);
+    setTodos((currentvalue) => {
+      return currentvalue.map((todo) => {
+        if (todo.id === id) {
+          return { ...todo, checked };
+        }
+        return todo;
+      });
+    });
+  }
+
+  function deleteTodo(id) {
+    setTodos((currentvalue) => {
+      return currentvalue.filter((todo) => todo.id !== id);
+    });
+  }
+
+  console.log(todos);
+
   return (
-    <> 
-  <form className="new-item-form"> 
-  <div className="form-row">
-    <h1>Ashok</h1>
-    <label htmlFor="item">Enter Name</label>
-    <input type="text" id="item" />
-    </div>
+    <>
+      <form className="new-item-form" onSubmit={submitForm}>
+        <div className="form-row">
+          <h1>Ashok</h1>
+          <label htmlFor="item">Enter Name</label>
+          <input
+            type="text"
+            onChange={(e) => setNewItem(e.target.value)}
+            value={newItem}
+            id="item"
+          />
+        </div>
 
-    <button className="btn">Add Me!</button>
-  </form>
+        <button className="btn">Add Me!</button>
+      </form>
 
-  <h1>Todo List</h1>
-  <ul className="list">
-    <li>
-      <label>
-        <input type="checkbox"></input>
-        Sample 1
-      </label>
-      <button className="btn btn-danger">Delete</button>
-    </li>
-  </ul>
-  </>
-  )
+      <h1>Todo List</h1>
+      <ul className="list">
+        {todos.map((todo) => {
+          return (
+            <li key={todo.id}>
+              <label>
+                <input
+                  type="checkbox"
+                  id={`checkbox-${todo.id}`}
+                  checked={todo.checked}
+                  onChange={(e) => {
+                    toggleTodo(todo.id, e.target.checked);
+                  }}
+                />
+                {todo.title}
+              </label>
+              <button
+                onClick={() => deleteTodo(todo.id)}
+                className="btn btn-danger"
+              >
+                Delete
+              </button>
+            </li>
+          );
+        })}
+      </ul>
+    </>
+  );
 }
