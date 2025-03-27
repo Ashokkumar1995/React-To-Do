@@ -5,10 +5,14 @@ import { useState } from "react";
 import { useEffect } from "react";
 
 export default function App() {
-  const [todos, setTodos] = useState([]);
+  const [todos, setTodos] = useState(() => {
+    const items = localStorage.getItem("todos") ?? [];
+
+    return JSON.parse(items);
+  });
 
   useEffect(() => {
-    localStorage.setItem("todos", todos);
+    localStorage.setItem("todos", JSON.stringify(todos));
   }, [todos]);
 
   function addTodo(title) {
